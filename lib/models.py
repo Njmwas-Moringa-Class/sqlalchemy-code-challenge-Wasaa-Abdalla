@@ -4,13 +4,13 @@ import sys
 sys.path.append(os.getcwd)
 
 from sqlalchemy import (create_engine, Table, PrimaryKeyConstraint, ForeignKey, Column, String, Integer)
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref,sessionmaker
 
 from sqlalchemy.ext.declarative import declarative_base
 
 
 Base = declarative_base()
-engine = create_engine('sqlite:///db/restaurants.db', echo=True)
+engine = create_engine('sqlite:///caffeterria.db', echo=True)
 
 
 rest_customers = Table(
@@ -63,3 +63,26 @@ class Review(Base):
                 f'restaurant_name={self.restaurant_name})'+ \
                 f'ratings={self.star_rating}, '
 
+# create an engine that stores data in the local directory's school_performance.db file.
+engine = create_engine('sqlite:///caffeterria.db')
+
+# create all tables in the engine
+Base.metadata.create_all(engine)
+
+# create a configured "Session" class
+Session = sessionmaker(bind=engine)
+
+# create a session
+session = Session()
+
+new_restaurant = Restaurant(name='Barka Cafe', price=2000)
+new_restaurant1 = Restaurant(name='Bin-Agil Cafe', price=3000)
+
+customer1 = Customer(first_name="Jaffar",last_name="Nassor")
+customer2 = Customer(first_name="Robert",last_name="Nguma")
+
+review1 = Review(star_rating=10,customer_id="1",restaurant_id="1")
+
+
+session.add(review1)
+session.commit()
